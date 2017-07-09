@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+	<style>
+		#userSearch{
+			margin-top:7%;
+			margin-left:10%;
+			padding-left:2px;
+			border-radius:10px 10px;
+			border-width:2px;
+			border-color:black;
+			float:left;
+			/*background-image:url("after login/rainbow.jpg");*/
+			width:200px;
+			
+		}
+		#search{
+		background-color:#18bc9c;
+		color:#fff;
+		margin-top:7%;
+		font-size:12pt;
+		width:80px;
+		height:30px;
+		padding-top:0px;
+		padding-left:10px;
+		padding-right:10px;
+		margin-left:10px;
+		}
+		
+		#warning{
+			width: 20px;
+			height:20px;
+		}
+		
+		#userWrong{
+			color: red;
+			text-shadow:1px 1px black;
+			display: none;
+			margin-bottom: 15px;
+			text-align: center;
+		}
+
+		
+	</style>
+	
+	<script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+	<script src="js/firebase.js"></script>
+	
+	<!--When You Click On The Searchbar -->
+	<script>
+			var ref = new Firebase("https://homepageimages.firebaseio.com/");
+			var build="";
+			var build2="";
+			var build3="";
+			var n=0;
+			ref.on('value', function(snapshot) {
+				$('#search').click(function (e) {
+				var username = $('#userSearch').val().toUpperCase();
+				var data;
+				var art="";
+				for(key in snapshot.val()){
+					data = snapshot.val()[key];
+					if(username != data.Artist.toUpperCase()){
+					build ="";
+					build2="";
+					build3="";
+					}
+					if(username == data.Artist.toUpperCase()){
+					
+				  build+=  "<div class='col-sm-4 portfolio-item'>" 
+                  build+= "<a href='#portfolioModal"+n+"'" + "class='portfolio-link' data-toggle='modal'>" 
+                  build+=  "<div class='caption'>" 
+                  build+=  "<div class='caption-content'>" 
+                  build+=   "<i class='a fa-search-plus fa-3x'></i>" 
+                  build+=   "</div>" 
+                  build+=   "</div>" 
+                  build+=   "<img src='"+ data.img + " ' class='img-responsive' alt=''>"
+                  build+=   "</a>"
+				  build+=    "</div>"
+		   build2+= "<div class='portfolio-modal modal fade' id='portfolioModal"+n+"'" +"tabindex='-1' role='dialog' aria-hidden='true'>"
+           build2+="<div class='modal-content'>"
+           build2+="<div class='close-modal' data-dismiss='modal'>"
+           build2+="<div class='lr'>"
+           build2+= "<div class='rl'>"
+           build2+= "</div>"
+           build2+= "</div>"
+           build2+= "</div>"
+           build2+= "<div class='container'>"
+           build2+="<div class='row'>"
+           build2+="<div class='col-lg-8 col-lg-offset-2'>"
+           build2+= "<div class='modal-body'>"
+           build2+= "<h2>"+data.title+"</h2>"
+           build2+= "<img src='" + data.img + "' class='img-responsive img-centered' alt=''>"
+           build2+= "<h4><a href=''>"+data.Artist+"</a></h4>"
+           build2+= "<p>"+data.description+"</p>"
+           build2+=  "<ul class='list-inline item-details'>"
+           build2+=     "<li><i>Date Uploaded:</i> "
+           build2+=    "<strong>"+data.Date+"</strong>"
+           build2+= "</li>"
+           build2+= "<li><i>Tags:</i> "
+           build2+=   "<strong>"+data.tags+"</strong>"
+           build2+="</li>"
+           build2+="</ul> "               
+           build2+= "<button type='button' class='btn btn-default' data-dismiss='modal'><i class='fa fa-times'></i> Close</button>"
+           build2+= "</div>"
+		   build2+= "</div>"
+           build2+= "</div>"
+           build2+= "</div>"
+           build2+= "</div>"
+           build2+= "</div>"
+		   
+				  document.getElementById("allpics").innerHTML = build;
+				  document.getElementById("allclickpics").innerHTML = build2;
+				  
+				  n++;
+				  art = data.Artist.toUpperCase();
+					}
+
+				}	
+				if(username != art){
+					$("#userWrong").show();
+					//window.location.href="";
+				};
+				
+				if(username == art){
+				build3+= "<h4 style='text-align:center;font-size:30px;'><a href=''>"+art+"'s Pictures</a></h4>"
+				document.getElementById("loadUser").innerHTML = build3;
+				$("#userWrong").hide();
+				}
+				
+			});
+		});
+	</script>
+	
+	<!--Getting Users Name After Login-->
+	<script>
+		function getParameterByName(name, url) {
+			if (!url) url = window.location.href;
+			name = name.replace(/[\[\]]/g, "\\$&");
+			var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+				results = regex.exec(url);
+			if (!results) return null;
+			if (!results[2]) return '';
+			return decodeURIComponent(results[2].replace(/\+/g, " "));
+		}
+		var user;
+		
+		function init(){
+			user = getParameterByName("data");
+			$("#user").html(user);
+			var link = $("#up").attr("href");
+			$("#up").attr("href",link + "?data="+user);
+		}
+		function init2(){
+			user = getParameterByName("data");
+			var link = $("#set").attr("href");
+			$("#set").attr("href",link + "?data="+user);
+			
+		}
+		function init3(){
+			user = getParameterByName("data");
+			$("#user").html(user);
+			var link = $("#pro").attr("href");
+			$("#pro").attr("href",link + "?data="+user);
+			
+		}
+		
+	</script>
+	
+	<!--Loading Pictures When Page Loads-->
+	<script>
+			function ulpic(){
+			   var build="";
+			   var build2="";
+			   var data;
+			   var n = 0;
+			   var uploadEncodedImg = new Firebase("https://homepageimages.firebaseio.com/");
+                   uploadEncodedImg.on("value", function(snapshot) {
+					 for(key in snapshot.val()){
+						data = snapshot.val()[key];
+				  build+=  "<div class='col-sm-4 portfolio-item'>" 
+                  build+= "<a href='#portfolioModal"+n+"'" + "class='portfolio-link' data-toggle='modal'>" 
+                  build+=  "<div class='caption'>" 
+                  build+=  "<div class='caption-content'>" 
+                  build+=   "<i class='a fa-search-plus fa-3x'></i>" 
+                  build+=   "</div>" 
+                  build+=   "</div>" 
+                  build+=   "<img src='"+ data.img + " ' class='img-responsive' alt=''>"
+                  build+=   "</a>"
+				  build+=    "</div>"
+		   build2+= "<div class='portfolio-modal modal fade' id='portfolioModal"+n+"'" +"tabindex='-1' role='dialog' aria-hidden='true'>"
+           build2+="<div class='modal-content'>"
+           build2+="<div class='close-modal' data-dismiss='modal'>"
+           build2+="<div class='lr'>"
+           build2+= "<div class='rl'>"
+           build2+= "</div>"
+           build2+= "</div>"
+           build2+= "</div>"
+           build2+= "<div class='container'>"
+           build2+="<div class='row'>"
+           build2+="<div class='col-lg-8 col-lg-offset-2'>"
+           build2+= "<div class='modal-body'>"
+           build2+= "<h2>"+data.title+"</h2>"
+           build2+= "<img src='" + data.img + "' class='img-responsive img-centered' alt=''>"
+           build2+= "<h4><a href=''>"+data.Artist+"</a></h4>"
+           build2+= "<p>"+data.description+"</p>"
+           build2+=  "<ul class='list-inline item-details'>"
+           build2+=     "<li><i>Date Uploaded:</i> "
+           build2+=    "<strong>"+data.Date+"</strong>"
+           build2+= "</li>"
+           build2+= "<li><i>Tags:</i> "
+           build2+=   "<strong>"+data.tags+"</strong>"
+           build2+="</li>"
+		   build2+="<hr>"
+		   build2+= "<li><h3>Want to see more pictures by this Artist?</h3> "
+           build2+="</li>"
+           build2+="<h6>Simply go to the search bar and search for <u>"+data.Artist+"</u>!</h6>"
+           build2+="</ul>" 
+           build2+= "<button type='button' class='btn btn-default' data-dismiss='modal'><i class='fa fa-times'></i> Close</button>"
+           build2+= "</div>"
+		   build2+= "</div>"
+           build2+= "</div>"
+           build2+= "</div>"
+           build2+= "</div>"
+		   build2+="</div>"
+		   		
+				  document.getElementById("allpics").innerHTML = build;
+				  document.getElementById("allclickpics").innerHTML = build2;
+				  
+				  n++;
+				  
+				  }  
+				
+				});
+			}
+		
+  
+	</script> 
+	    
+	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" cotent="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>ArtStart</title>
+	
+    <link href="after login/bootstrap.min.css" rel="stylesheet">
+    <link href="after login/freelancer.css" rel="stylesheet">
+    <link href="after login/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+	
+</head>
+
+<body id="page-top" class="index" onload="init(); init2(); init3(); ulpic();">
+
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="">Welcome to ArtStart ~ <span id="user"></span></a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="hidden">
+                        <a href="#page-top"></a>
+                    </li>
+                    <li class="page-scroll mylink">
+                        <a id="pro" href="profile/profile.html">Profile</a>
+                    </li>
+                    <li class="page-scroll mylink">
+                        <a id="up" href="Upload Page/upload.html">Upload</a>
+                    </li>
+					<li class="page-scroll mylink">
+                        <a target="_blank" id="about" href="promotional/home.html">About</a>
+                    </li>
+                    <li class="page-scroll mylink">
+                        <a id="set" href="Settings/settings.html">Settings</a>
+                    </li>
+		    <li class="page-scroll">
+                        <a href="#username"></a>
+                    
+		    </li>
+		    <li class="page-scroll">
+                        <a href="login-a.html">Logout</a>
+                    </li>
+                </ul>
+            </div>
+           
+        </div>
+     
+    </nav>
+	
+	<!--search bar -->
+	
+	<input type="text" class="input-block-level" placeholder="Search for another user!" id="userSearch" name="SearchBar">
+	<input id="search" type="submit" class="btn btn-success btn-lg" value="Explore">
+	<div id="userWrong">
+		<img id="warning" src="RedExclamation.png">
+		<b>That Username does not exist</b>
+	</div>
+	
+	
+	<div id ="loadUser">
+	</div>
+	
+	<section id="portfolio">
+	
+        <div class="container" id = "allpics" style="margin-top:20px;">
+		
+		<!--Put a 'loading image'-->
+		<div id="imgLoad" align="center">
+		<img src="hex-loader2.gif">
+		</div>
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2></h2>
+                </div>
+            </div>
+            <div class="row">
+                <!--<div class="col-sm-4 portfolio-item" id="newdiv">
+                    <a href="#portfolioModal1" class="portfolio-link" data-toggle="modal">
+                        <div class="caption">
+                            <div class="caption-content">
+                                <i class="fa fa-search-plus fa-3x"></i>
+                            </div>
+                        </div>
+                        <img src="" class="img-responsive" id="uppicture" alt="">
+                    </a>
+                </div>
+                <div class="col-sm-4 portfolio-item">
+                    <a href="#portfolioModal2" class="portfolio-link" data-toggle="modal">
+                        <div class="caption">
+                            <div class="caption-content">
+                                <i class="fa fa-search-plus fa-3x"></i>
+                            </div>
+                        </div>
+                        <img src="pictures/art2.jpg" class="img-responsive" alt="">
+                    </a>
+                </div>
+                <div class="col-sm-4 portfolio-item">
+                    <a href="#portfolioModal3" class="portfolio-link" data-toggle="modal">
+                        <div class="caption">
+                            <div class="caption-content">
+                                <i class="fa fa-search-plus fa-3x"></i>
+                            </div>
+                        </div>
+                        <img src="pictures/art3.jpg" class="img-responsive" alt="">
+                    </a>
+                </div>
+                <div class="col-sm-4 portfolio-item">
+                    <a href="#portfolioModal4" class="portfolio-link" data-toggle="modal">
+                        <div class="caption">
+                            <div class="caption-content">
+                                <i class="fa fa-search-plus fa-3x"></i>
+                            </div>
+                        </div>
+                        <img src="pictures/art4.jpg" class="img-responsive" alt="">
+                    </a>
+                </div>
+                <div class="col-sm-4 portfolio-item">
+                    <a href="#portfolioModal5" class="portfolio-link" data-toggle="modal">
+                        <div class="caption">
+                            <div class="caption-content">
+                                <i class="fa fa-search-plus fa-3x"></i>
+                            </div>
+                        </div>
+                        <img src="pictures/art5.jpg" class="img-responsive" alt="">
+                    </a>
+                </div>
+                <div class="col-sm-4 portfolio-item">
+                    <a href="#portfolioModal6" class="portfolio-link" data-toggle="modal">
+                        <div class="caption">
+                            <div class="caption-content">
+                                <i class="fa fa-search-plus fa-3x"></i>
+                            </div>
+                        </div>
+                        <img src="pictures/art6.jpg" class="img-responsive" alt="">
+                    </a>
+                </div>
+				<div class="col-sm-4 portfolio-item">
+                    <a href="#portfolioModal6" class="portfolio-link" data-toggle="modal">
+                        <div class="caption">
+                            <div class="caption-content">
+                                <i class="fa fa-search-plus fa-3x"></i>
+                            </div>
+                        </div>
+                        <img src="pictures/art7.jpg" class="img-responsive" alt="">
+                    </a>
+                </div>
+				<div class="col-sm-4 portfolio-item">
+                    <a href="#portfolioModal6" class="portfolio-link" data-toggle="modal">
+                        <div class="caption">
+                            <div class="caption-content">
+                                <i class="fa fa-search-plus fa-3x"></i>
+                            </div>
+                        </div>
+                        <img src="pictures/art8.jpg" class="img-responsive" alt="">
+                    </a>
+                </div>
+				<div class="col-sm-4 portfolio-item">
+                    <a href="#portfolioModal6" class="portfolio-link" data-toggle="modal">
+                        <div class="caption">
+                            <div class="caption-content">
+                                <i class="fa fa-search-plus fa-3x"></i>
+                            </div>
+                        </div>
+                        <img src="pictures/art9.jpg" class="img-responsive" alt="">
+                    </a>
+                </div> -->
+            </div>
+        </div>
+    </section>
+	
+		<!-- <button type="button" class="btn btn-default" data-dismiss="modal">Show More</button> -->
+
+        <!--<div class="footer-below">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        Copyright &copy; ArtStart 2015
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>-->
+
+    <div class="scroll-top page-scroll visible-xs visible-sm">
+        <a class="btn btn-primary" href="#page-top">
+            <i class="fa fa-chevron-up"></i>
+        </a>
+    </div>
+
+	<div id ="allclickpics">
+	<div>
+    <!--<div class="portfolio-modal modal fade" id="portfolioModal1" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+            <div class="close-modal" data-dismiss="modal">
+                <div class="lr">
+                    <div class="rl">
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-lg-offset-2">
+                        <div class="modal-body">
+                            <h2>Project Title</h2>
+                            <img src="pictures/art.jpg" class="img-responsive img-centered" alt="">
+							<h4><a href="">Username</a></h4>
+                            <p>Art work description</p>
+                            <ul class="list-inline item-details">
+                                <li>Date Uploaded:
+                                    <strong>April 2014</strong>
+                                </li>
+                                <li>Tags:
+                                    <strong>Miscellaneous</strong>
+                                </li>
+                            </ul>
+                            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="portfolio-modal modal fade" id="portfolioModal2" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+            <div class="close-modal" data-dismiss="modal">
+                <div class="lr">
+                    <div class="rl">
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-lg-offset-2">
+                        <div class="modal-body">
+                            <h2>Project Title</h2>
+                            <img src="pictures/art2.jpg" class="img-responsive img-centered" alt="">
+							<h4><a href="">Username</a></h4>
+                            <p>Art work description</p>
+                            <ul class="list-inline item-details">
+                                <li>Date Uploaded:
+                                    <strong>April 2014</strong>
+                                </li>
+                                <li>Tags:
+                                    <strong>Miscellaneous</strong>
+                                </li>
+                            </ul>
+                            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="portfolio-modal modal fade" id="portfolioModal3" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+            <div class="close-modal" data-dismiss="modal">
+                <div class="lr">
+                    <div class="rl">
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-lg-offset-2">
+                        <div class="modal-body">
+                            <h2>Project Title</h2>
+                            <img src="pictures/art3.jpg" class="img-responsive img-centered" alt="">
+							<h4><a href="">Username</a></h4>
+                            <p>Art work description</p>
+                            <ul class="list-inline item-details">
+                                <li>Date Uploaded:
+                                    <strong>April 2014</strong>
+                                </li>
+                                <li>Tags:
+                                    <strong>Miscellaneous</strong>
+                                </li>
+                            </ul>
+                            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="portfolio-modal modal fade" id="portfolioModal4" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+            <div class="close-modal" data-dismiss="modal">
+                <div class="lr">
+                    <div class="rl">
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-lg-offset-2">
+                        <div class="modal-body">
+                            <h2>Project Title</h2>
+                            <img src="pictures/art4.jpg" class="img-responsive img-centered" alt="">
+							<h4><a href="">Username</a></h4>
+                            <p>Art work description</p>
+                            <ul class="list-inline item-details">
+                                <li>Date Uploaded:
+                                    <strong>April 2014</strong>
+                                </li>
+                                <li>Tags:
+                                    <strong>Miscellaneous</strong>
+                                </li>
+                            </ul>
+                            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="portfolio-modal modal fade" id="portfolioModal5" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+            <div class="close-modal" data-dismiss="modal">
+                <div class="lr">
+                    <div class="rl">
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-lg-offset-2">
+                        <div class="modal-body">
+                            <h2>Project Title</h2>
+                            <img src="pictures/art5.jpg" class="img-responsive img-centered" alt="">
+							<h4><a href="">Username</a></h4>
+                            <p>Art work description</p>
+                            <ul class="list-inline item-details">
+                                <li>Date Uploaded:
+                                    <strong>April 2014</strong>
+                                </li>
+                                <li>Tags:
+                                    <strong>Miscellaneous</strong>
+                                </li>
+                            </ul>
+                            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="portfolio-modal modal fade" id="portfolioModal6" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+            <div class="close-modal" data-dismiss="modal">
+                <div class="lr">
+                    <div class="rl">
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-lg-offset-2">
+                        <div class="modal-body">
+                            <h2>Project Title</h2>
+                            <img src="pictures/art6.jpg" class="img-responsive img-centered" alt="">
+							<h4><a href="">Username</a></h4>
+                            <p>Art work description</p>
+                            <ul class="list-inline item-details">
+                                <li>Date Uploaded:
+                                    <strong>April 2014</strong>
+                                </li>
+                                <li>Tags:
+                                    <strong>Miscellaneous</strong>
+                                </li>
+                            </ul>
+                            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+	
+	<!-- Where firebase images load 
+	<div>
+		<img src="" id="picture">
+	</div>
+	-->
+	
+	
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+    <script src="js/classie.js"></script>
+    <script src="js/cbpAnimatedHeader.js"></script>
+    <script src="js/jqBootstrapValidation.js"></script>
+    <script src="js/contact_me.js"></script>
+    <script src="js/freelancer.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Login - ArtStart</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+	<script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+    <script type="text/javascript" src="jquery-2.0.3.min.js"></script>
+    <script type="text/javascript" src="bootstrap.min.js"></script>
+    <script type="text/javascript" src="ladda.js"></script>
+    <script type="text/javascript" src="login.js"></script>
+
+    <link href="bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="login.css" rel="stylesheet" type="text/css" />
+    <link href="bootstrap-responsive.css" rel="stylesheet" type="text/css" />
+    <link href="ladda.css" rel="stylesheet" type="text/css" />
+	
+	<style>
+		#userWrong{
+			color: red;
+			text-shadow:1px 1px black;
+			display: none;
+			margin-bottom: 15px;
+			text-align: center;
+		}
+		#passWrong{
+			color: red;
+			text-shadow:1px 1px black;
+			display: none;
+			margin-bottom: 15px;
+			text-align: center;
+		}
+		#ifvalid{
+			color: red;
+			text-shadow:1px 1px black;
+			display: none;
+			margin-bottom: 15px;
+			text-align: center;
+		}
+		#iftaken{
+			color: red;
+			text-shadow:1px 1px black;
+			display: none;
+			margin-bottom: 15px;
+			text-align: center;
+		}
+		#ifconnected{
+			color: red;
+			text-shadow:1px 1px black;
+			display: none;
+			margin-bottom: 15px;
+			text-align: center;
+		}
+		#ifExist{
+			color: red;
+			text-shadow:1px 1px black;
+			display: none;
+			margin-bottom: 15px;
+			text-align: center;
+		}
+		
+		#warning{
+			width: 20px;
+			height:20px;
+		}
+	</style>
+	
+    </head>
+
+    <body>
+        <div class="container">
+            <div class="form-signin">
+                <img src="artstartlogo.png">
+                <form method="POST">
+                  <div id="form-signin">
+                      <input type="text" class="input-block-level" placeholder="Username" id="usename" name="UserName">
+                      <!--<div id="userWrong">
+							<img id="warning" src="RedExclamation.png">
+							<b>That Username does not exist</b>
+						</div>-->
+					  <input type="password" class="input-block-level" placeholder="Password" id="pasword" name="Password">
+                      <div id="passWrong">
+							<img id="warning" src="RedExclamation.png">
+							<b>Invalid Information</b>
+						</div>
+					  <div id="loginbutton">
+						  <button id="btnLogOn" class="btn btn-large btn-primary btn-block ladda-button zoom-out">
+                          <a href="" id="btnlog"><span class="ladda-label">Login</span></a>
+                          <span class="ladda-spinner"></span>
+					  </div>
+                          <div class="ladda-progress" style="width: 0px;"></div>
+                      </button>
+                  </div>
+                </form>
+
+					<!-- When you Click On Login -->
+		<script>
+			var ref = new Firebase("https://asaccounts.firebaseio.com/");
+			ref.on('value', function(database) {
+				$('#btnLogOn').click(function (e) {
+				var username = $('#usename').val();
+				var password = $('#pasword').val();
+				database.forEach(function(data){
+					if(username != data.val().UsersInfo.username || password != data.val().UsersInfo.password){
+						$("#passWrong").show();
+						return;
+					}
+					
+					else if(data.val().UsersInfo.username == username && data.val().UsersInfo.password == password){
+						
+						//window.open("in.html?data="+username,'myTab');
+						window.location.href = "in.html?data="+username;
+						$("#passWrong").hide();
+						return;
+					}
+						
+						});
+						//if(data.val().username != username || data.val().password != password)
+						//elseif(data.val().username !== username || data.val().password !== password)
+						//return alert("Invalid username or password");
+						
+				});
+		
+			})
+			/*var username = $('#usename').val();
+			var password = $('#pasword').val();
+			
+ref.authWithPassword({
+  email    : username,
+  password : password
+}, function(error, authData) {
+  if (error) {
+    console.log("Login Failed!", error);
+  } else {
+    console.log("Authenticated successfully with payload:", authData);
+  }
+});*/
+	
+		</script>
+		
+                <form method="POST">
+                  <div id="form-register" style="display: none">
+						<input id="firstnameInput" class="input-block-level" name="Firstname" type="text" placeholder="First Name">
+						<input id="lastnameInput" class="input-block-level" name="Lastname" type="text" placeholder="Last Name">
+						<input id="usernameInput" class="input-block-level" name="Username" type="text" placeholder="Username">
+						<div id="iftaken">
+							<img id="warning" src="RedExclamation.png">
+							<b>That Username is taken. Choose another.</b>
+						</div>
+						<input id="emailInput" class="input-block-level" name="Email" type="text" placeholder="Email">
+						<div id="ifconnected">
+							<img id="warning" src="RedExclamation.png">
+							<b>That email is already associated with<br>an account.</b>
+						</div>
+						
+						<input id="passwordInput" class="input-block-level" name="Password" type="password" placeholder="Password">
+						  
+						<input id="confirm" class="input-block-level" name="Confirm" type="password" placeholder="Confirm password">
+						<!--Error div if confirm password is invalid-->
+						<div id="ifvalid"> 
+								
+							<img id="warning" src="RedExclamation.png">
+							<b>The passwords don't match</b>
+						</div>
+						  
+						<button id="btnRegisterCancel" class="btn btn-inverse">Cancel</button>
+						<button id="btnRegisterSend" class="btn btn-success ladda-button zoom-out">
+							  
+							<span class="ladda-label">Register</span>
+							<span class="ladda-spinner"></span>
+							
+							<div class="ladda-progress" style="width: 0px;"></div>
+						</button>
+						  
+					  </div>
+				  
+				  
+					
+				  
+                </form>
+				
+				
+			<!-- When you Click On Register! -->
+			
+		<script>
+			  var myDataRef = new Firebase('https://asaccounts.firebaseio.com/');
+			  myDataRef.on('value', function(database){
+				$('#btnRegisterSend').click(function (e) {
+								
+					/*var ref = new Firebase("https://asaccounts.firebaseio.com/");
+					ref.createUser({
+					email: email,
+					username: username,
+					firstName:fname,
+					lastName:lname,
+					password : password
+					}, function(error, userData) {
+				if (error) {
+				console.log("Error creating user:", error);
+			} else {
+				console.log("Successfully created user account with uid:", userData.uid);
+				}
+				});
+					*/
+					var checkEmail = $('#emailInput').val();
+					var checkUser = $('#usernameInput').val();
+					var DBUser;
+					var DBEmail;
+				
+					database.forEach(function(data){
+						if(data.val().UsersInfo.username == checkUser){
+							
+							$('#iftaken').show();
+							DBUser = checkUser;
+						}
+						if(data.val().UsersInfo.email == checkEmail){
+							
+							$('#ifconnected').show();
+							DBEmail = checkEmail;
+						}
+					});
+					
+					var pass = $('#passwordInput').val();
+					var confirmPass = $('#confirm').val();
+					
+					if(pass != confirmPass){
+						
+						$('#ifvalid').show();
+						return;
+					}
+					if(pass == confirmPass && checkUser == DBUser || checkEmail == DBEmail){
+						return;
+					}
+				
+		
+					var fname = $('#firstnameInput').val();
+					var lname = $('#lastnameInput').val();
+					var username = $('#usernameInput').val();
+					var email = $('#emailInput').val();
+					var password = $('#passwordInput').val();
+					var usersRef = myDataRef.child(username);
+					usersRef.set({
+						UsersInfo:{
+						firstname: fname, 
+						lastname: lname, 
+						username: username, 
+						email: email, 
+						password: password,
+						description:""
+						}
+				  //myDataRef.push({firstname: fname, lastname: lname, username: username, email: email, password: password});
+					});
+				
+					window.location.href = "login-a.html";
+					
+			  
+			});
+			   myDataRef.on('child_added', function(snapshot) {
+				var message = snapshot.val();
+				console.log("Username & Password:  " + message.UsersInfo.username,message.UsersInfo.password);
+				
+			  }); 
+		</script>
+		
+		
+                <form method="POST">
+                  <div id="form-forgot" style="display: none">
+                      <input id="rec-email" class="input-block-level" name="Email" type="text" placeholder="Email">
+					  <div id="ifExist">
+							<img id="warning" src="RedExclamation.png">
+							<b>That email is not registered with ArtStart.</b>
+					  </div>
+                      <button id="btnForgotCancel" class="btn btn-inverse">Cancel</button>
+                      <button id="btnForgotSend" class="btn btn-danger ladda-button zoom-out">
+                          <span class="ladda-label">Recover</span>
+                          <span class="ladda-spinner"></span>
+                          <div class="ladda-progress" style="width: 0px;"></div>
+                      </button>
+                  </div>
+                </form>
+            </div>
+            <div id="well" class="well well-small">
+                <p style="margin: 0">Don't have an account? <strong><a id="btnRegister">Register now!</a></strong></p>
+            </div>
+            <p id="copyright">&copy; ArtStart - <a id="btnForgot">Forgot your password?</a></p>
+        </div> <!-- /container -->
+		
+		
+		<!--When you click on Recover-->
+		
+		<script>
+			var myDataRef = new Firebase('https://asaccounts.firebaseio.com/');
+			myDataRef.on('value', function(database){
+				$('#btnForgotSend').click(function (e) {
+					var getEmail = $('#rec-email').val();
+					var DBPass = "";
+					var DBName = "";
+					var dataEmail = "";
+					database.forEach(function(data){
+						if(data.val().UsersInfo.email == getEmail){
+							DBPass = data.val().UsersInfo.password;
+							alert("Your password is " + DBPass + ".");
+							dataEmail = getEmail;
+						}
+					});
+					if(dataEmail != getEmail){
+						$('#ifExist').show();
+					}
+					
+				});
+			});
+		
+		
+		
+		</script>
+		
+        <script>
+            // Bind normal buttons
+            Ladda.bind( '.ladda-button', { timeout: 1000 } );
+        </script>
+
+    </body>
+</html>

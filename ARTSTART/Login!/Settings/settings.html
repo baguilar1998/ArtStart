@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>ArtStart-Settings</title>
+	
+	<script>
+		function getParameterByName(name, url) {
+			if (!url) url = window.location.href;
+			name = name.replace(/[\[\]]/g, "\\$&");
+			var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+				results = regex.exec(url);
+			if (!results) return null;
+			if (!results[2]) return '';
+			return decodeURIComponent(results[2].replace(/\+/g, " "));
+		}
+		var user;
+
+		function init(){
+			user = getParameterByName("data");
+			var link = $("#main").attr("href");
+			$("#main").attr("href",link + "?data="+user);
+		}
+		function init2(){
+			user = getParameterByName("data");
+			var link = $("#up").attr("href");
+			$("#up").attr("href",link + "?data="+user);
+			
+		}
+		function init3(){
+			user = getParameterByName("data");
+			var link = $("#pro").attr("href");
+			$("#pro").attr("href",link + "?data="+user);
+			
+		}
+		
+	</script>
+	
+	<script src="js/firebase.js"></script>
+
+    <!-- Bootstrap Core CSS - Uses Bootswatch Flatly Theme: http://bootswatch.com/flatly/ -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+	<link href="css/firepano.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/freelancer.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+	<style>
+		#about{
+			float:left;
+			width:40%;
+		}
+		#settings{
+			width:60%;
+			margin-right:auto;
+			margin-left:auto;
+		}
+		#private{
+			margin-right:auto;
+			margin-left:auto;
+		}
+		select{
+			font-size:20pt;
+		}
+	</style>
+</head>
+
+<body id="page-top" class="index" onload="init(); init2(); init3(); setload()">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a id="main" class="navbar-brand" href="../in.html">ArtStart</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="hidden">
+                        <a href="#page-top"></a>
+                    </li>
+                    <li class="page-scroll">
+                        <a id="pro" href="../profile/profile.html">Profile</a>
+                    </li>
+                    <li class="page-scroll">
+                        <a id="up" href="../Upload Page/upload.html">Upload</a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="">Settings</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+
+	<br><br><br>
+
+    
+    <!-- Contact Section -->
+	<script id="changer">
+	function setPro(){
+			var ref = new Firebase("https://asaccounts.firebaseio.com/");
+			var user =getParameterByName("data");
+			function getParameterByName(name, url) {
+			if (!url) url = window.location.href;
+			name = name.replace(/[\[\]]/g, "\\$&");
+			var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+				results = regex.exec(url);
+			if (!results) return null;
+			if (!results[2]) return '';
+			return decodeURIComponent(results[2].replace(/\+/g, " "));
+			}
+			
+		var fname= document.getElementById("fname").value
+		
+		var lname= document.getElementById("lname").value
+		
+		var email= document.getElementById("email").value
+		
+		var user= document.getElementById("user").value
+		
+		var des= document.getElementById("bio").value
+		
+		var password;
+		ref.on('value', function(database) {
+				database.forEach(function(data){
+					if(data.val().UsersInfo.username == user){
+						password=data.val().UsersInfo.password;
+						
+					}
+						});
+					})
+		
+		
+		
+		
+		 usersRef = ref.child(username);
+				  usersRef.set({
+					UsersInfo:{
+				  firstname: fname, 
+				  lastname: lname, 
+				  username: user, 
+				  email: email, 
+				  password: password,
+				  description: des
+				  } 
+				  //myDataRef.push({firstname: fname, lastname: lname, username: username, email: email, password: password});
+				  });
+		//alert("Profile Updated !!!")
+		}
+	
+	</script>
+    <section id="page">
+        <div class="container">
+		<div id="settings">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2>Settings</h2>
+                    <hr class="star-primary">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2">
+                    <!-- To configure the contact form email address, go to mail/contact_me.php and update the email address in the PHP file on line 19. -->
+                    <!-- The form should work on most web servers, but if the form is not working you may need to configure your web server differently. -->
+                    
+                        <div class="row control-group">
+                            <div class="form-group col-xs-12 floating-label-form-group controls">
+                                <label>First Name</label>
+                                <input type="text" class="form-control" placeholder="First Name" id="fname" >
+                                <p class="help-block text-danger"></p>
+                            </div>
+                        </div>
+						 <div class="row control-group">
+                            <div class="form-group col-xs-12 floating-label-form-group controls">
+                                <label>Last Name</label>
+                                <input type="text" class="form-control" placeholder="Last Name" id="lname" >
+                                <p class="help-block text-danger"></p>
+                            </div>
+                        </div>
+                        <div class="row control-group">
+                            <div class="form-group col-xs-12 floating-label-form-group controls">
+                                <label>Username</label>
+                                <input type="text" class="form-control" placeholder="Username" id="user" >
+                                <p class="help-block text-danger"></p>
+                            </div>
+                        </div>
+                       <!-- <div class="row control-group">
+                            <div class="form-group col-xs-12 floating-label-form-group controls">
+                                <label>Email Address</label>
+                                <input type="tel" class="form-control" placeholder="Phone Number" id="phone" >
+                                <p class="help-block text-danger"></p>
+                            </div>
+                        </div>-->
+                        <div class="row control-group">
+                            <div class="form-group col-xs-12 floating-label-form-group controls">
+                                <label>Biography</label>
+                                <textarea rows="5" class="form-control" placeholder="Biography" id="bio" ></textarea>
+                                <p class="help-block text-danger"></p>
+                            </div>
+                        </div>
+                        <br>
+                        <div id="success"></div
+                    
+                </div>
+            </div>
+        </div>
+	</div>
+    </section>
+	<hr class="featurette-divider">
+	<div id="private" style="width:50%">
+	
+	            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2>Private Settings</h2>
+                    <hr class="star-primary">
+                </div>
+            </div>
+			<div class="row control-group">
+                            <div class="form-group col-xs-12 floating-label-form-group controls">
+                                <label>Email Address</label>
+                                <input type="text" class="form-control" placeholder="Email Address" id="email" >
+                                <p class="help-block text-danger"></p>
+                            </div>
+								<hr class="featurette-divider">
+			<div class="row control-group">
+                            <div class="form-group col-xs-12 floating-label-form-group controls">
+                                <label>Phone Number</label>
+                                <input type="text" class="form-control" placeholder="Phone Number" id="email" >
+                                <p class="help-block text-danger"></p>
+                            </div>
+            </div>
+			<!--<div class="row control-group">
+			<br>
+			<select class="form-group col-xs-12 floating-label-form-group controls">
+					<option value="M">Male</option>
+					<option value="F">Female</option>
+					
+
+			</select>
+			</div> -->
+            </div>
+	</div>
+	<button type="submit" class="btn btn-success btn-lg" style="margin-left:625px; margin-top:20px;" onclick="setPro()">Set Changes</button>
+	
+	<br>
+	<hr>
+	<button type="submit" class="btn btn-success btn-lg" style="margin-left:610px; margin-top:20px; background-color:red; border-color:red;" onclick="daccount()">Delete Account </button>
+	<p style="margin-left:450px; margin-top:20px;"> Note: Once You Click Delete, Your Account Will Be Deleted </p>
+	
+	<script>
+		function daccount(){
+			var ref = new Firebase("https://asaccounts.firebaseio.com/");
+			var user;
+			
+		function getParameterByName(name, url) {
+			if (!url) url = window.location.href;
+			name = name.replace(/[\[\]]/g, "\\$&");
+			var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+				results = regex.exec(url);
+			if (!results) return null;
+			if (!results[2]) return '';
+			return decodeURIComponent(results[2].replace(/\+/g, " "));
+		}
+		user = getParameterByName("data");
+		
+		 var r = confirm("Are You Sure You Want To Delete Your Accout?");
+		if (r == true) {
+			ref.child(user).onDisconnect().remove();
+			window.location.href = "../login-a.html";
+		}
+	}
+	</script>
+	<script id="set">
+		var ref = new Firebase("https://asaccounts.firebaseio.com/");
+		//variable
+	
+		var user1= document.getElementById("user");
+		var username;
+		function setload(){
+
+			function getParameterByName(name, url) {
+			if (!url) url = window.location.href;
+			name = name.replace(/[\[\]]/g, "\\$&");
+			var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+				results = regex.exec(url);
+			if (!results) return null;
+			if (!results[2]) return '';
+			return decodeURIComponent(results[2].replace(/\+/g, " "));
+		}
+		username = getParameterByName("data");
+
+		
+			user1.setAttribute("value", username);
+		
+		ref.on('value', function(database) {
+
+			database.forEach(function(data){
+				var fn = data.val().UsersInfo.firstname;
+				var ln = data.val().UsersInfo.lastname;
+				var email=data.val().UsersInfo.email;
+				var des= data.val().UsersInfo.description;
+				if(data.val().UsersInfo.username == user){
+					document.getElementById("fname").setAttribute("value",fn + "");
+					document.getElementById("lname").setAttribute("value",ln + "");
+					document.getElementById("email").setAttribute("value",email + "");
+					//document.getElementById("bio").setAttribute("value",des + "");
+					document.getElementById("bio").innerHTML = des + "";
+					return;
+					}
+						
+				});
+			
+			
+		});
+		//email
+		
+		}
+		
+	</script>
+	<hr class="featurette-divider">
+	
+    <!-- Footer -->
+    <footer class="text-center">
+    
+        <div class="footer-below">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        Copyright &copy; ArtStart 2016
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button (Only visible on small and extra-small screen sizes) -->
+    <div class="scroll-top page-scroll visible-xs visible-sm">
+        <a class="btn btn-primary" href="#page-top">
+            <i class="fa fa-chevron-up"></i>
+        </a>
+    </div>
+
+   
+
+    
+
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+
+    <!-- Plugin JavaScript -->
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+    <script src="js/classie.js"></script>
+    <script src="js/cbpAnimatedHeader.js"></script>
+
+    <!-- Contact Form JavaScript -->
+    <script src="js/jqBootstrapValidation.js"></script>
+    <script src="js/contact_me.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="js/freelancer.js"></script>
+
+</body>
+
+</html>
